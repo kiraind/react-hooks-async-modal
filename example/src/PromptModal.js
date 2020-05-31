@@ -14,8 +14,11 @@ const PromptModal = ({
             className="ModalWrap"
             ref={backRef}
 
-            // prevent triggering while clicked on child
-            onClick={e => e.target === backRef.current && onReject('Clicked outside modal')}
+            onClick={e =>
+                // prevent triggering while clicked on child
+                (e.target === backRef.current)
+                    && onReject('Clicked outside modal')
+            }
         >
             <div className="ModalBody">
                 <p>{message}</p>
