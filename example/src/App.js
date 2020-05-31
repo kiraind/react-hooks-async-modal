@@ -1,50 +1,35 @@
 import React, { useState } from 'react'
 
 import { useModal } from 'react-hooks-async-modal'
-import { useRef } from 'react'
 
-const PromptModal = ({
-    message,
-    onResolve,
-    onReject,
-}) => {
-    const inputRef = useRef(null)
-
-    return (
-        <div>
-            <p>{message}</p>
-            <input
-                ref={inputRef}
-            />
-            <button
-                onClick={onReject}
-            >Cancel</button>
-            <button
-                onClick={() => onResolve(inputRef.current.value)}
-            >Ok</button>
-        </div>
-    )
-}
+import PromptModal from './PromptModal.js'
 
 const App = () => {
     const [ promptedText, setPromptedText ] = useState('none')
+    const [ thrownText,   setThrownText ]   = useState('none')
 
     const callPromptModal = useModal(PromptModal)
 
-
     const onPrompt = async () => {
-        const text = await callPromptModal()
-
-        setPromptedText(text)
+        try {
+            const text = await callPromptModal({ message: 'Enter some text' })
+            setPromptedText(text)
+        } catch(error) {
+            setThrownText(error.toString())
+        }
     }
 
     return (
-        <div>
-            <div>Prompted text: {promptedText}</div>
+        <main>
+            <p>
+                Prompted text: {promptedText}
+            <br/>
+                Thrown: {thrownText}
+            </p>
             <button
                 onClick={onPrompt}
             >Prompt!</button>
-        </div>
+        </main>
     )
 }
 

@@ -1,6 +1,11 @@
 import React, {
     useState,
+    useContext,
 } from 'react'
+
+import ModalContext from './ModalContext.js'
+
+let uniqueCounter = 0
 
 /**
  * 
@@ -10,49 +15,54 @@ import React, {
 export default function useModal(ModalComponent) {
     // called every render
 
-    const [ modalShown, setModalShown ] = useState(false)
-    const [ modalProps, setModalProps ] = useState({})
+    const [ modalId,    setModalId ]    = useState(null)
 
-    const [ onResolve, setOnResolve ] = useState(null)
-    const [ onReject,  setOnReject  ] = useState(null)
+    const modalContext = useContext(ModalContext)
 
-    const clearCallbacks = () => {
-        setModalProps({})
-        setOnResolve(null)
-        setOnReject(null)
+    if(!modalContext) {
+        throw new Error(`Seems like <ModalProvider /> is not present in the tree above, wrap your app with it or check docs`)
     }
 
-    console.log(
-        modalShown ? (
+    const closeModal = () => {
+        modalContext.removeModal(modalId)
+
+        setModalId(null)
+    }
+
+    return props => {
+        const id = uniqueCounter++
+
+        setModalId(id)
+
+        let onResolve, onReject
+        
+        const promise = new Promise( (resolve, reject) => {
+            // callbacks passed to component
+
+            onResolve = result => {
+                closeModal()
+
+                resolve(result)
+            }
+
+            onReject = reason => {
+                closeModal()
+
+                reject(reason)
+            }
+        })
+
+        modalContext.setModal(id, (
             <ModalComponent
+                key={id}
+
                 onResolve={onResolve}
                 onReject={onReject}
 
-                {...modalProps}
+                {...props}
             />
-        ) : null,
-    )
+        ))
 
-    return props => {
-        setModalProps(props)
-        setModalShown(true)
-
-        return new Promise( (resolve, reject) => {
-            // callbacks passed to component
-
-            setOnResolve(() => result => {
-                setModalShown(false)
-                clearCallbacks()
-
-                resolve(result)
-            })
-
-            setOnReject(() => reason => {
-                setModalShown(false)
-                clearCallbacks()
-
-                reject(reason)
-            })
-        })
+        return promise
     }
 }
