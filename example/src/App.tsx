@@ -28,7 +28,8 @@ const App = () => {
       </p>
       <button
         onClick={onPrompt}
-      >Prompt!
+      >
+        Prompt!
       </button>
     </main>
   )
