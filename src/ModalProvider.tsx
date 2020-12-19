@@ -4,23 +4,27 @@ import React, {
 
 import ModalContext from './ModalContext.js'
 
-const ModalProvider = ({
+interface ModalProviderProps {
+    children: React.ReactChildren
+}
+
+const ModalProvider: React.FC<ModalProviderProps> = ({
     children,
 }) => {
-    const [ shownModals, setShownModals ] = useState({})
+    const [shownModals, setShownModals] = useState<Record<number, React.ReactNode>>({})
 
     /**
      * 
      * @param {React.ReactElement} modal 
      */
-    const setModal = (id, modal) => {
+    const setModal = (id: number, modal: React.ReactNode) => {
         setShownModals({
             ...shownModals,
             [id]: modal,
         })
     }
     
-    const removeModal = id => {
+    const removeModal = (id: number) => {
         const {
             [id]: _removed,
             ...rest
