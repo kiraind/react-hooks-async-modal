@@ -18,53 +18,53 @@ First, import `ModalProvider` and wrap your App with it:
 import { ModalProvider } from 'react-hooks-async-modal'
 
 ReactDOM.render(
-    (
-        <ModalProvider>
-            <App />
-        </ModalProvider>
-    ),
-    document.getElementById('root')
+  (
+    <ModalProvider>
+      <App />
+    </ModalProvider>
+  ),
+  document.getElementById('root')
 )
-
 ```
 
 Then create component for modal, it must have `onResolve` and `onReject` callback props. May have custom props like `message`. [Here](https://github.com/kiraind/react-hooks-async-modal/tree/master/example) is an example async implementation of browser's `prompt`:
 
 ```jsx
 const PromptModal = ({
-    message,
-    
-    onResolve,
-    onReject,
+  message,
+
+  onResolve,
+  onReject
 }) => {
-    const inputRef = useRef(null)
-    const backRef  = useRef(null)
+  const inputRef = useRef(null)
+  const backRef = useRef(null)
 
-    return (
-        <div
-            className="ModalWrap"
-            ref={backRef}
+  return (
+    <div
+      className='ModalWrap'
+      ref={backRef}
 
-            onClick={e =>
-                // prevent triggering while clicked on child
-                (e.target === backRef.current)
-                    && onReject('Clicked outside modal')
-            }
-        >
-            <div className="ModalBody">
-                <p>{message}</p>
-                <input
-                    ref={inputRef}
-                />
-                <button
-                    onClick={() => onReject('Input cancelled')}
-                >Cancel</button>
-                <button
-                    onClick={() => onResolve(inputRef.current.value)}
-                >Ok</button>
-            </div>
-        </div>
-    )
+      onClick={e =>
+        // prevent triggering if clicked on a child
+        (e.target === backRef.current) &&
+            onReject('Clicked outside modal')}
+    >
+      <div className='ModalBody'>
+        <p>{message}</p>
+        <input
+          ref={inputRef}
+        />
+        <button
+          onClick={() => onReject('Input cancelled')}
+        >Cancel
+        </button>
+        <button
+          onClick={() => onResolve(inputRef.current.value)}
+        >Ok
+        </button>
+      </div>
+    </div>
+  )
 }
 ```
 
@@ -74,33 +74,32 @@ To use it as an async function, import `useModal` like here:
 import { useModal } from 'react-hooks-async-modal'
 
 const App = () => {
-    const [ promptedText, setPromptedText ] = useState('none')
-    const [ thrownText,   setThrownText ]   = useState('none')
+  const [promptedText, setPromptedText] = useState('none')
+  const [thrownText, setThrownText] = useState('none')
 
-    // creating async function
-    const callPromptModal = useModal(PromptModal)
+  const callPromptModal = useModal(PromptModal)
 
-    const onPrompt = async () => {
-        try {
-            // passing custom props as an argument
-            const text = await callPromptModal({ message: 'Enter some text' })
-            setPromptedText(text)
-        } catch(error) {
-            setThrownText(error.toString())
-        }
+  const onPrompt = async () => {
+    try {
+      const text = await callPromptModal({ message: 'Enter some text' })
+      setPromptedText(text)
+    } catch (error) {
+      setThrownText(error.toString())
     }
+  }
 
-    return (
-        <main>
-            <p>
-                Prompted text: {promptedText}
-            <br/>
-                Thrown: {thrownText}
-            </p>
-            <button
-                onClick={onPrompt}
-            >Prompt!</button>
-        </main>
-    )
+  return (
+    <main>
+      <p>
+        Prompted text: {promptedText}
+        <br />
+        Thrown: {thrownText}
+      </p>
+      <button
+        onClick={onPrompt}
+      >Prompt!
+      </button>
+    </main>
+  )
 }
 ```

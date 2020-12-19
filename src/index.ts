@@ -4,7 +4,7 @@ import useModal from './useModal'
 import ModalContext from './ModalContext'
 
 export {
-    ModalProvider,
-    ModalContext,
-    useModal,
+  ModalProvider,
+  ModalContext,
+  useModal
 }
