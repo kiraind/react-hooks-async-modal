@@ -1,7 +1,4 @@
-import React, {
-    useState,
-    useContext,
-} from 'react'
+import React, { useContext } from 'react'
 
 import ModalContext from './ModalContext.js'
 
@@ -23,26 +20,14 @@ export default function useModal<ModalPropsT, ReturnedType = void>(
 ) {
     // called every render
 
-    const [modalId, setModalId] = useState<number | null>(null)
-
     const modalContext = useContext(ModalContext)
 
     if(modalContext === null) {
         throw new Error(`Seems like <ModalProvider /> is not present in the tree above, wrap your app with it or check docs`)
     }
 
-    const closeModal = () => {
-        if (modalId !== null) {
-            modalContext.removeModal(modalId)
-        }
-
-        setModalId(null)
-    }
-
     return (props: ModalPropsT) => {
         const id = uniqueCounter++
-
-        setModalId(id)
 
         let onResolve: (value: ReturnedType) => void
         let onReject: (reason: any) => void
@@ -51,13 +36,13 @@ export default function useModal<ModalPropsT, ReturnedType = void>(
             // callbacks passed to component
 
             onResolve = (result: ReturnedType) => {
-                closeModal()
+                modalContext.removeModal(id)
 
                 resolve(result)
             }
 
             onReject = (reason: any) => {
-                closeModal()
+                modalContext.removeModal(id)
 
                 reject(reason)
             }
