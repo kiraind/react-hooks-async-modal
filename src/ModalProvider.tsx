@@ -5,7 +5,7 @@ import React, {
 import ModalContext from './ModalContext.js'
 
 interface ModalProviderProps {
-  children: React.ReactChildren
+  children: React.ReactNode
 }
 
 const ModalProvider: React.FC<ModalProviderProps> = ({

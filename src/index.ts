@@ -1,5 +1,5 @@
 import ModalProvider from './ModalProvider'
-import useModal from './useModal'
+import useModal, { ModalComponentProps } from './useModal'
 
 import ModalContext from './ModalContext'
 
@@ -7,4 +7,8 @@ export {
   ModalProvider,
   ModalContext,
   useModal
+}
+
+export type {
+  ModalComponentProps
 }

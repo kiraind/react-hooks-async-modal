@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 
 import ModalContext from './ModalContext.js'
 
-interface ModalComponentProps<ReturnedType> {
+export interface ModalComponentProps<ReturnedType> {
   key: number
   onResolve: (value: ReturnedType) => void
-  onReject: (reason: any) => void
+  onReject?: (reason: any) => void
 }
 
 let uniqueCounter = 0

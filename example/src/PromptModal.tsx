@@ -1,12 +1,17 @@
 import React, { useRef } from 'react'
+import { ModalComponentProps } from 'react-hooks-async-modal'
 
-const PromptModal = ({
+export interface PromptModalProps {
+  message: string
+}
+
+const PromptModal: React.FC<PromptModalProps & ModalComponentProps<string>> = ({
   message,
 
   onResolve,
   onReject
 }) => {
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const backRef = useRef(null)
 
   return (
@@ -17,7 +22,7 @@ const PromptModal = ({
       onClick={e =>
         // prevent triggering if clicked on a child
         (e.target === backRef.current) &&
-            onReject('Clicked outside modal')}
+          onReject!('Clicked outside modal')}
     >
       <div className='ModalBody'>
         <p>{message}</p>
@@ -25,11 +30,11 @@ const PromptModal = ({
           ref={inputRef}
         />
         <button
-          onClick={() => onReject('Input cancelled')}
+          onClick={() => onReject!('Input cancelled')}
         >Cancel
         </button>
         <button
-          onClick={() => onResolve(inputRef.current.value)}
+          onClick={() => onResolve(inputRef.current!.value)}
         >Ok
         </button>
       </div>

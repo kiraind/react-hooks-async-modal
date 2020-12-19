@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 
 import { useModal } from 'react-hooks-async-modal'
 
-import PromptModal from './PromptModal.js'
+import PromptModal, { PromptModalProps } from './PromptModal'
 
 const App = () => {
   const [promptedText, setPromptedText] = useState('none')
   const [thrownText, setThrownText] = useState('none')
 
-  const callPromptModal = useModal(PromptModal)
+  const callPromptModal = useModal<PromptModalProps, string>(PromptModal)
 
   const onPrompt = async () => {
     try {
