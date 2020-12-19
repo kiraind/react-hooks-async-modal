@@ -28,7 +28,7 @@ ReactDOM.render(
 
 ```
 
-Then create component for modal, it must have `onResolve` and `onReject` callback props. May have custom props like `message`. Here is an example async implementation of browser's `prompt`:
+Then create component for modal, it must have `onResolve` and `onReject` callback props. May have custom props like `message`. [Here](https://github.com/kiraind/react-hooks-async-modal/tree/master/example) is an example async implementation of browser's `prompt`:
 
 ```jsx
 const PromptModal = ({
