@@ -111,6 +111,16 @@ const App = () => {
 }
 ```
 
+If you're connecting your modal to Redux or using some other HOC that returns type incompatible with `useModal` argument you can use `proxyModal`:
+
+```tsx
+import { proxyModal } from 'react-hooks-async-modal'
+
+export default proxyModal<string>(
+  connect(mapStateToProps, mapDispatchToProps)(PromptModalInner)
+)
+```
+
 ## License
 
 MIT

@@ -3,7 +3,6 @@ import React, { useContext } from 'react'
 import ModalContext from './ModalContext.js'
 
 export interface ModalComponentProps<ReturnedType> {
-  key: number
   onResolve: (value: ReturnedType) => void
   onReject?: (reason: any) => void
 }
@@ -51,7 +50,6 @@ export default function useModal<ModalPropsT, ReturnedType = void> (
 
     modalContext.setModal(id, (
       <ModalComponent
-        key={id}
         /* eslint-disable @typescript-eslint/no-non-null-assertion */
         onResolve={onResolve!}
         onReject={onReject!}
