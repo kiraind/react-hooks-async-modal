@@ -2,9 +2,10 @@ import React, { useContext } from 'react'
 
 import ModalContext from './ModalContext.js'
 
-export interface ModalComponentProps<ReturnedType> {
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+export interface ModalComponentProps<ReturnedType = void> {
   onResolve: (value: ReturnedType) => void
-  onReject?: (reason: any) => void
+  onReject: (reason: any) => void
 }
 
 let uniqueCounter = 0
