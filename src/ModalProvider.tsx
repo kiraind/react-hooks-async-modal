@@ -33,12 +33,8 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
     setShownModals(rest)
   }
 
-  const modalArray = Object.keys(shownModals)
-    .map(key => {
-      const Component = shownModals[key]
-
-      return <Component key={key} />
-    })
+  const modalArray: React.ReactNode = Object.keys(shownModals)
+    .map(key => React.cloneElement(shownModals[key], { key }))
 
   return (
     <ModalContext.Provider
