@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 
 import ModalComponentProps from './ModalComponentProps'
 import ModalContext from './ModalContext'
@@ -22,7 +22,7 @@ export default function useCancellableModal<ModalPropsT, ReturnedType = void> (
     throw new Error('Seems like <ModalProvider /> is not present in the tree above, wrap your app with it or check docs')
   }
 
-  return (props: ModalPropsT): [Promise<ReturnedType>, () => void] => {
+  return useCallback((props: ModalPropsT): [Promise<ReturnedType>, () => void] => {
     const id = uniqueCounter++
 
     let onResolve: (value: ReturnedType) => void
@@ -57,5 +57,5 @@ export default function useCancellableModal<ModalPropsT, ReturnedType = void> (
     const cancel = (): void => onReject('Closed from outside')
 
     return [promise, cancel]
-  }
+  }, [ModalComponent])
 }

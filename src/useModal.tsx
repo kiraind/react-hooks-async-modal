@@ -12,10 +12,10 @@ import useCancellableModal from './useCancellableModal'
 export default function useModal<ModalPropsT, ReturnedType = void> (
   ModalComponent: React.ComponentType<ModalComponentProps<ReturnedType> & ModalPropsT>
 ): (props: ModalPropsT) => Promise<ReturnedType> {
-  const callCancellableModal = useCallback(
-    useCancellableModal<ModalPropsT, ReturnedType>(ModalComponent),
+  const callCancellableModal = useCancellableModal<ModalPropsT, ReturnedType>(ModalComponent)
+
+  return useCallback(
+    async props => await callCancellableModal(props)[0],
     [ModalComponent]
   )
-
-  return async props => await callCancellableModal(props)[0]
 }
