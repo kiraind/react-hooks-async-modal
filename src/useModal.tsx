@@ -1,14 +1,5 @@
-import React, { useContext } from 'react'
-
-import ModalContext from './ModalContext.js'
-
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-export interface ModalComponentProps<ReturnedType = void> {
-  onResolve: (value: ReturnedType) => void
-  onReject: (reason: any) => void
-}
-
-let uniqueCounter = 0
+import ModalComponentProps from './ModalComponentProps'
+import useCancellableModal from './useCancellableModal'
 
 /**
  *
@@ -19,46 +10,7 @@ let uniqueCounter = 0
 export default function useModal<ModalPropsT, ReturnedType = void> (
   ModalComponent: React.ComponentType<ModalComponentProps<ReturnedType> & ModalPropsT>
 ): (props: ModalPropsT) => Promise<ReturnedType> {
-  // called every render
+  const callCancellableModal = useCancellableModal<ModalPropsT, ReturnedType>(ModalComponent)
 
-  const modalContext = useContext(ModalContext)
-
-  if (modalContext === null) {
-    throw new Error('Seems like <ModalProvider /> is not present in the tree above, wrap your app with it or check docs')
-  }
-
-  return async (props: ModalPropsT): Promise<ReturnedType> => {
-    const id = uniqueCounter++
-
-    let onResolve: (value: ReturnedType) => void
-    let onReject: (reason: any) => void
-
-    const promise = new Promise<ReturnedType>((resolve, reject) => {
-      // callbacks passed to component
-
-      onResolve = (result: ReturnedType) => {
-        modalContext.removeModal(id)
-
-        resolve(result)
-      }
-
-      onReject = (reason: any) => {
-        modalContext.removeModal(id)
-
-        reject(reason)
-      }
-    })
-
-    modalContext.setModal(id, (
-      <ModalComponent
-        /* eslint-disable @typescript-eslint/no-non-null-assertion */
-        onResolve={onResolve!}
-        onReject={onReject!}
-        /* eslint-enable @typescript-eslint/no-non-null-assertion */
-        {...props}
-      />
-    ))
-
-    return promise
-  }
+  return async props => await callCancellableModal(props)[0]
 }
