@@ -14,7 +14,7 @@ const App = () => {
     try {
       const text = await callPromptModal({ message: 'Enter some text' })
       setPromptedText(text)
-    } catch (error) {
+    } catch (error: any) {
       setThrownText(error.toString())
     }
   }
